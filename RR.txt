@@ -1,0 +1,48 @@
+f= open("processes.txt")
+s=f.readline()
+quant=int(s)
+print(quant)
+new =[]         #List for new processes
+
+fileString=f.read();
+s=fileString.split("\n")
+for process in s:
+    a=process.split('\t')
+    new.append({"Name":a[0],"AT":int(a[1]),"BT":int(a[2])})
+
+print(new)
+ready=[]
+completed=[]
+timer=0
+while 1==1:
+    a=0
+    i=0
+    while a< len(new):
+        if new[a]["AT"]<=timer:
+            ready.append(new[a]);
+            ready[i].update({"Q":quant})
+            new.remove(new[a])
+            i+=1
+            a-=1
+        a+=1
+        break
+    if len(new)==0 and ready[0]['Q']==0:
+        ready[0]['Q']=quant
+
+    while 1==1:
+        ready[0]['Q']-=1
+        timer+=1
+        ready[0]["BT"]-=1
+        if ready[0]['Q']==0 or ready[0]["BT"]==0:
+            break
+    if ready[0]["BT"]>0:
+        ready.append(ready[0])
+        ready.remove(ready[0])
+        ready[0].update({'Q':quant})
+    else:
+        completed.append(ready[0])
+        ready.remove(ready[0])
+    if len(ready)==0 and len(new)==0:
+        break
+print(timer)
+print(completed)

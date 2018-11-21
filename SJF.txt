@@ -1,0 +1,50 @@
+f=open("processes.txt")
+
+list=[]
+for process in f:
+    s=process.split('\t')
+    list.append({"Name":s[0],"AT":int(s[1]),"BT":int(s[2])})
+
+print(list)
+ready=[]
+completed=[]
+timer=0;
+while 1==1:
+    a=0
+    while a<len(list):
+        if list[a]["AT"]<=timer:
+            ready.append(list[a])
+            list.remove(list[a]);
+            a-=1
+        a+=1
+    if len(ready)!=0:
+        ready = sorted(ready, key=lambda k: k["BT"]);
+        st=timer
+        burst=ready[0]["BT"]
+        while 1==1:
+            burst-=1
+            timer+=1
+            if burst==0:
+                break
+        ready[0].update({"ST":st})
+        ready[0].update({"FT":timer})
+        completed.append(ready[0])
+        ready.remove(ready[0])
+    else: timer+=1
+    if len(list)==0 and len(ready)==0:
+        break
+
+print("Total Time: ",timer)
+print("Completed processes: ")
+print(completed)
+
+sumTA=0;
+sumWT=0
+for x in completed:
+    sumTA+=x["FT"]-x["AT"]
+    sumWT+=x["ST"]-x["AT"]
+
+avgTurnaround=sumTA/len(completed)
+avgWaiting=sumWT/len(completed)
+print("Average  TurnAround Time: ",avgTurnaround)
+print("Average Waiting  Time: ",avgWaiting)

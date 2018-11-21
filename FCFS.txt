@@ -1,0 +1,39 @@
+f=open("processes.txt")
+list=[];
+i=0
+for x in f:
+    s=x.split('\t')
+    list.append({"name":s[0],"AT":int(s[1]),"BT":int(s[2])});
+    i+=1
+
+print(list);
+i=0
+timer=0;
+while 1==1:
+    if timer>=list[i]["AT"] and list[i]["BT"]>0:
+        list[i].update({"ST": timer})
+        burst=list[i]["BT"]
+        while 1==1:
+            burst-=1
+            timer+=1
+            if burst==0:
+                list[i].update({"FT":timer})
+                break
+        i+=1
+    else: timer+=1
+    if i>=len(list):
+        break
+print("Total time: ",timer)
+print(list)
+
+sum=0
+sumWT=0
+for x in list:
+    sum+=x["FT"]-x["AT"]
+    sumWT+=x["ST"]-x["AT"]
+
+turnAround=sum//len(list)
+avgWaiting=sumWT/len(list)
+
+print("Average Turn Around Time: ",turnAround)
+print("Average Waiting Time: ",avgWaiting)
